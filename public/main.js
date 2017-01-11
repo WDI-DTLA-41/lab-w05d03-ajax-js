@@ -8,7 +8,6 @@ var $moarDiv = $('<div>').attr('id', 'moar');
 $readyBtn.on('click', function(evt){
   $.get('/challenges', function(page, status){
     var html = '<ol>';
-    $challengeDiv.html(html);
     page.forEach(function(ind){
       html += '<li>' + ind.body + '</li>';
     })
