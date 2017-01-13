@@ -15,21 +15,15 @@ app.use(express.static(__dirname + '/public'));
 
 // Data
 var challenges = require('./lib/challenges');
-var decodeValues = [];
 challenges.forEach(function(ind){
   if(ind.id === 6 ){
-    decodeValues.push(ind);
-    console.log(ind);
+    var value = new Buffer(ind.body, 'base64').toString("ascii");
+    ind.body = value;
   } else if(ind.id >= 8){
       //var value = new Buffer(ind.body, 'base64').toString("ascii");
-      decodeValues.push(ind);
-      console.log(ind);
+      var value = new Buffer(ind.body, 'base64').toString("ascii");
+      ind.body = value;
     }
-})
-
-decodeValues.forEach(function(ind){
-  var value = new Buffer(ind.body, 'base64').toString("ascii");
-  ind.body = value;
 })
 
 
@@ -39,15 +33,9 @@ app.get('/challenges', function(req, resp){
   if(req.query.next === 'true'){
     var nextTwo = [];
     var valueOne = challenges.shift();
-    if(valueOne.id > 7){
-      valueOne = decodeValues.shift();
-      nextTwo.push(valueOne);
-      nextTwo.push(decodeValues.shift());
-    } else {
-        nextTwo.push(valueOne);
-        nextTwo.push(decodeValues.shift());
-        challenges.shift();
-      }
+    var valueTwo = challenges.shift();
+    nextTwo.push(valueOne);
+    nextTwo.push(valueTwo);
 
     resp.json(nextTwo);
   } else {
